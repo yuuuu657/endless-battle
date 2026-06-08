@@ -1,22 +1,22 @@
-import sqlite3
+import psycopg2
+import psycopg2.extras
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "data", "game.db")
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 def get_db():
-    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode=WAL")
+    conn = psycopg2.connect(DATABASE_URL)
+    conn.autocommit = False
     return conn
 
 def init_db():
     conn = get_db()
-    conn.executescript("""
+    cur = conn.cursor()
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS players (
-            id         INTEGER PRIMARY KEY AUTOINCREMENT,
-            name       TEXT    UNIQUE NOT NULL,
-            password   TEXT    NOT NULL,
+            id         SERIAL PRIMARY KEY,
+            name       TEXT UNIQUE NOT NULL,
+            password   TEXT NOT NULL,
             exp        INTEGER DEFAULT 0,
             gold       INTEGER DEFAULT 100,
             weapon_id  INTEGER DEFAULT 1,
@@ -24,34 +24,35 @@ def init_db():
             wins       INTEGER DEFAULT 0,
             losses     INTEGER DEFAULT 0,
             nation_id  INTEGER DEFAULT NULL,
-            created_at TEXT    DEFAULT (datetime('now','localtime'))
+            created_at TIMESTAMP DEFAULT NOW()
         );
 
         CREATE TABLE IF NOT EXISTS nations (
-            id         INTEGER PRIMARY KEY AUTOINCREMENT,
-            name       TEXT    UNIQUE NOT NULL,
+            id         SERIAL PRIMARY KEY,
+            name       TEXT UNIQUE NOT NULL,
             leader_id  INTEGER NOT NULL,
             gold       INTEGER DEFAULT 0,
-            created_at TEXT    DEFAULT (datetime('now','localtime'))
+            created_at TIMESTAMP DEFAULT NOW()
         );
 
         CREATE TABLE IF NOT EXISTS battle_log (
-            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            id          SERIAL PRIMARY KEY,
             attacker_id INTEGER NOT NULL,
-            defender    TEXT    NOT NULL,
-            result      TEXT    NOT NULL,
+            defender    TEXT NOT NULL,
+            result      TEXT NOT NULL,
             exp_gain    INTEGER DEFAULT 0,
             gold_gain   INTEGER DEFAULT 0,
-            created_at  TEXT    DEFAULT (datetime('now','localtime'))
+            created_at  TIMESTAMP DEFAULT NOW()
         );
 
         CREATE TABLE IF NOT EXISTS chat (
-            id         INTEGER PRIMARY KEY AUTOINCREMENT,
+            id         SERIAL PRIMARY KEY,
             player_id  INTEGER NOT NULL,
-            name       TEXT    NOT NULL,
-            message    TEXT    NOT NULL,
-            created_at TEXT    DEFAULT (datetime('now','localtime'))
+            name       TEXT NOT NULL,
+            message    TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT NOW()
         );
     """)
     conn.commit()
+    cur.close()
     conn.close()
