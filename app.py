@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash
 import bcrypt
 import os
+import psycopg2.extras
 from db import get_db, init_db
 from game import (
     WEAPONS, ARMORS, calc_level, get_exp_for_level, calc_max_hp,
@@ -330,7 +331,6 @@ def admin():
         return "403 Forbidden", 403
     conn = get_db()
 
-import psycopg2.extras
     cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     if request.method == "POST":
         name   = request.form["name"]
