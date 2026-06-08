@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-box">
+  <h2>新規登録</h2>
+  <form method="post">
+    <label>プレイヤー名（2〜16文字）<input type="text" name="name" required minlength="2" maxlength="16"></label>
+    <label>パスワード<input type="password" name="password" required minlength="4"></label>
+    <button class="btn btn-primary" type="submit">登録して冒険へ</button>
+  </form>
+  <p class="form-link">すでに登録済み？ <a href="{{ url_for('login') }}">ログイン</a></p>
+</div>
+{% endblock %}

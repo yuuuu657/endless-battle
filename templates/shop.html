@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="shop">
+  <div class="card">
+    <h2>🏪 武器ショップ</h2>
+    <p class="gold-display">所持GOLD: <strong>{{ player.gold }} G</strong></p>
+    <table>
+      <tr><th>武器名</th><th>攻撃力</th><th>価格</th><th>必要Lv</th><th></th></tr>
+      {% for id, w in weapons.items() %}
+      <tr class="{{ 'equipped' if player.weapon_id == id else '' }}">
+        <td>{{ w.name }} {% if player.weapon_id == id %}<span class="tag">装備中</span>{% endif %}</td>
+        <td>+{{ w.atk }}</td>
+        <td>{{ w.price }} G</td>
+        <td>Lv{{ w.min_lv }}</td>
+        <td>
+          {% if player.weapon_id != id %}
+          <form method="post" action="{{ url_for('shop_buy') }}">
+            <input type="hidden" name="type" value="weapon">
+            <input type="hidden" name="item_id" value="{{ id }}">
+            <button class="btn btn-sm btn-primary" {{ 'disabled' if player.gold < w.price }}>購入</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:1rem">
+    <h2>🛡️ 防具ショップ</h2>
+    <table>
+      <tr><th>防具名</th><th>防御力</th><th>価格</th><th>必要Lv</th><th></th></tr>
+      {% for id, a in armors.items() %}
+      <tr class="{{ 'equipped' if player.armor_id == id else '' }}">
+        <td>{{ a.name }} {% if player.armor_id == id %}<span class="tag">装備中</span>{% endif %}</td>
+        <td>+{{ a.def }}</td>
+        <td>{{ a.price }} G</td>
+        <td>Lv{{ a.min_lv }}</td>
+        <td>
+          {% if player.armor_id != id %}
+          <form method="post" action="{{ url_for('shop_buy') }}">
+            <input type="hidden" name="type" value="armor">
+            <input type="hidden" name="item_id" value="{{ id }}">
+            <button class="btn btn-sm btn-primary" {{ 'disabled' if player.gold < a.price }}>購入</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="margin-top:1rem">← 戻る</a>
+</div>
+{% endblock %}

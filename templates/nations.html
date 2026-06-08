@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="nations-page">
+
+  {% if not player.nation_id %}
+  <div class="card">
+    <h2>🏰 国を建国する（500G）</h2>
+    <form method="post" action="{{ url_for('create_nation') }}">
+      <label>国名<input type="text" name="name" required minlength="2" maxlength="20"></label>
+      <button class="btn btn-primary" type="submit">建国する</button>
+    </form>
+  </div>
+  {% else %}
+  <div class="card">
+    <p>現在の所属国: <strong>{{ player.nation_id }}番の国</strong></p>
+    <form method="post" action="{{ url_for('leave_nation') }}">
+      <button class="btn btn-secondary" onclick="return confirm('国を離脱しますか？')">離脱する</button>
+    </form>
+  </div>
+  {% endif %}
+
+  <div class="card" style="margin-top:1rem">
+    <h2>🌍 国家一覧</h2>
+    {% if nations %}
+    <table>
+      <tr><th>国名</th><th>人数</th><th>国庫</th><th></th></tr>
+      {% for n in nations %}
+      <tr>
+        <td>{{ n.name }}</td>
+        <td>{{ n.member_count }}人</td>
+        <td>{{ n.gold }} G</td>
+        <td>
+          {% if not player.nation_id %}
+          <form method="post" action="{{ url_for('join_nation', nation_id=n.id) }}">
+            <button class="btn btn-sm btn-info">加入</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <p class="empty">まだ国家がありません。最初の建国者になりましょう！</p>
+    {% endif %}
+  </div>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="margin-top:1rem">← 戻る</a>
+</div>
+{% endblock %}

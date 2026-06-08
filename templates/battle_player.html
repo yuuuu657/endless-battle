@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>🗡️ 対人戦</h2>
+  <p>挑戦するプレイヤーを選んでください。勝利するとEXPとGOLDを獲得できます。</p>
+  {% if players %}
+  <table>
+    <tr><th>名前</th><th>Lv</th><th>勝</th><th>敗</th><th></th></tr>
+    {% for pl in players %}
+    <tr>
+      <td>{{ pl.name }}</td>
+      <td>{{ pl.level }}</td>
+      <td class="win">{{ pl.wins }}</td>
+      <td class="lose">{{ pl.losses }}</td>
+      <td>
+        <form method="post">
+          <input type="hidden" name="target_id" value="{{ pl.id }}">
+          <button class="btn btn-sm btn-danger">挑戦</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="empty">他のプレイヤーがいません。友達を誘いましょう！</p>
+  {% endif %}
+  <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="margin-top:1rem">← 戻る</a>
+</div>
+{% endblock %}

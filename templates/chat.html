@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card chat-page">
+  <h2>💬 チャット</h2>
+  <div class="chat-log" id="chat-log">
+    {% for msg in messages %}
+    <div class="chat-msg">
+      <span class="chat-name">{{ msg.name }}</span>
+      <span class="chat-time">{{ msg.created_at }}</span>
+      <p class="chat-text">{{ msg.message }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  <form method="post" action="{{ url_for('chat_post') }}" class="chat-form">
+    <input type="text" name="message" placeholder="メッセージを入力..." required maxlength="200" autocomplete="off">
+    <button class="btn btn-primary" type="submit">送信</button>
+  </form>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="margin-top:.5rem">← 戻る</a>
+</div>
+<script>
+  const log = document.getElementById('chat-log');
+  if(log) log.scrollTop = log.scrollHeight;
+</script>
+{% endblock %}

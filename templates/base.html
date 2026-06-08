@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>エンドレスバトル</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="{{ url_for('dashboard') }}" class="logo">⚔️ エンドレスバトル</a>
+    {% if session.player_id %}
+    <nav>
+      <a href="{{ url_for('dashboard') }}">ホーム</a>
+      <a href="{{ url_for('battle_monster') }}" onclick="return confirm('モンスターと戦いますか？')" style="cursor:pointer">討伐</a>
+      <a href="{{ url_for('battle_player') }}">対人</a>
+      <a href="{{ url_for('shop') }}">ショップ</a>
+      <a href="{{ url_for('nations') }}">国家</a>
+      <a href="{{ url_for('chat') }}">チャット</a>
+      <a href="{{ url_for('logout') }}">ログアウト</a>
+    </nav>
+    {% endif %}
+  </div>
+</header>
+<main>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <div class="flash-box">
+    {% for m in messages %}<p>{{ m }}</p>{% endfor %}
+  </div>
+  {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer><p>⚔️ Endless Battle - Browser RPG</p></footer>
+</body>
+</html>

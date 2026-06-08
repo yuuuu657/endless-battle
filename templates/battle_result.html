@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="battle-result">
+  <div class="card">
+    {% if result.result == 'win' or result.winner == 'attacker' %}
+    <h2 class="win">🎉 勝利！</h2>
+    {% elif result.result == 'draw' or result.winner == 'draw' %}
+    <h2 class="draw">🤝 引き分け</h2>
+    {% else %}
+    <h2 class="lose">💀 敗北…</h2>
+    {% endif %}
+
+    <div class="battle-log">
+      {% for line in result.log %}
+      <p class="log-line">{{ line }}</p>
+      {% endfor %}
+    </div>
+
+    {% if result.exp > 0 or result.gold > 0 %}
+    <div class="rewards">
+      <span>✨ EXP +{{ result.exp }}</span>
+      <span>💰 GOLD +{{ result.gold }}</span>
+    </div>
+    {% endif %}
+
+    <div class="action-buttons" style="margin-top:1.5rem">
+      <form method="post" action="{{ url_for('battle_monster') }}">
+        <button class="btn btn-danger">⚔️ もう一度戦う</button>
+      </form>
+      <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">🏠 ホームへ</a>
+      {% if pvp %}
+      <a href="{{ url_for('battle_player') }}" class="btn btn-warning">🗡️ 対人戦一覧</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

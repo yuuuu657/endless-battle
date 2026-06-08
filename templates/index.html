@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+  <h1>⚔️ エンドレスバトル</h1>
+  <p class="subtitle">戦い、成長し、国を築け。終わりなき戦いへ。</p>
+  <div class="hero-buttons">
+    <a href="{{ url_for('register') }}" class="btn btn-primary">新規登録</a>
+    <a href="{{ url_for('login') }}"    class="btn btn-secondary">ログイン</a>
+  </div>
+  <div class="features">
+    <div class="feature"><span>⚔️</span><p>戦闘・レベルアップ</p></div>
+    <div class="feature"><span>🗡️</span><p>武器・防具収集</p></div>
+    <div class="feature"><span>🏰</span><p>国家建設・同盟</p></div>
+    <div class="feature"><span>💬</span><p>チャット交流</p></div>
+  </div>
+</div>
+{% endblock %}

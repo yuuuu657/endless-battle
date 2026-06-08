@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard">
+
+  <div class="card status-card">
+    <h2>👤 {{ player.name }}</h2>
+    <div class="status-grid">
+      <div class="stat"><span class="stat-label">Lv</span><span class="stat-value big">{{ player.level }}</span></div>
+      <div class="stat"><span class="stat-label">HP</span><span class="stat-value">{{ player.max_hp }}</span></div>
+      <div class="stat"><span class="stat-label">EXP</span><span class="stat-value">{{ player.exp }} / {{ player.exp_next }}</span></div>
+      <div class="stat"><span class="stat-label">GOLD</span><span class="stat-value gold">{{ player.gold }} G</span></div>
+      <div class="stat"><span class="stat-label">武器</span><span class="stat-value">{{ player.weapon_name }}</span></div>
+      <div class="stat"><span class="stat-label">防具</span><span class="stat-value">{{ player.armor_name }}</span></div>
+      <div class="stat"><span class="stat-label">勝</span><span class="stat-value win">{{ player.wins }}</span></div>
+      <div class="stat"><span class="stat-label">敗</span><span class="stat-value lose">{{ player.losses }}</span></div>
+    </div>
+    <div class="exp-bar-wrap">
+      {% set pct = ((player.exp - (player.exp_next // 2)) / (player.exp_next - (player.exp_next // 2)) * 100)|int %}
+      <div class="exp-bar" style="width: {{ [pct, 100]|min }}%"></div>
+    </div>
+    <div class="action-buttons">
+      <form method="post" action="{{ url_for('battle_monster') }}">
+        <button class="btn btn-danger">⚔️ モンスターと戦う</button>
+      </form>
+      <a href="{{ url_for('battle_player') }}" class="btn btn-warning">🗡️ プレイヤーに挑む</a>
+      <a href="{{ url_for('shop') }}" class="btn btn-info">🏪 ショップ</a>
+    </div>
+  </div>
+
+  <div class="bottom-grid">
+    <div class="card">
+      <h3>📜 最近の戦闘記録</h3>
+      {% if logs %}
+      <table>
+        <tr><th>相手</th><th>結果</th><th>EXP</th><th>GOLD</th></tr>
+        {% for log in logs %}
+        <tr>
+          <td>{{ log.defender }}</td>
+          <td class="{{ 'win' if log.result in ['win','attacker'] else 'lose' }}">
+            {{ '勝利' if log.result in ['win','attacker'] else ('引分' if log.result=='draw' else '敗北') }}
+          </td>
+          <td>+{{ log.exp_gain }}</td>
+          <td>+{{ log.gold_gain }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <p class="empty">まだ戦闘記録がありません</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h3>🏆 ランキング TOP10</h3>
+      <table>
+        <tr><th>#</th><th>名前</th><th>EXP</th><th>勝</th></tr>
+        {% for i, r in ranking|enumerate %}
+        <tr class="{{ 'me' if r.name == player.name else '' }}">
+          <td>{{ i+1 }}</td>
+          <td>{{ r.name }}</td>
+          <td>{{ r.exp }}</td>
+          <td>{{ r.wins }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
