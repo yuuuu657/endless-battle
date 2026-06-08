@@ -8,7 +8,7 @@ from game import (
 )
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "endless-battle-secret-change-in-prod")
+app.secret_key = "endless-battle-2026-fixed-key"
 app.jinja_env.globals["enumerate"] = enumerate
 
 init_db()
