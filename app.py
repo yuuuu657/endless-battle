@@ -329,6 +329,8 @@ def admin():
     if request.args.get("key") != "endless2026admin":
         return "403 Forbidden", 403
     conn = get_db()
+
+import psycopg2.extras
     cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     if request.method == "POST":
         name   = request.form["name"]
