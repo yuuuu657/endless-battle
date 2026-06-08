@@ -29,7 +29,7 @@ def current_player():
     if "player_id" not in session:
         return None
     conn = get_db()
-    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur = conn.cursor()
     p = fetch_one(cur, "SELECT * FROM players WHERE id=%s", (session["player_id"],))
     cur.close()
     conn.close()
@@ -66,7 +66,7 @@ def register():
             return render_template("register.html")
         hashed = bcrypt.hashpw(pw.encode(), bcrypt.gensalt()).decode()
         conn = get_db()
-        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur = conn.cursor()
         try:
             cur.execute("INSERT INTO players (name, password) VALUES (%s,%s)", (name, hashed))
             conn.commit()
@@ -88,7 +88,7 @@ def login():
         name = request.form["name"].strip()
         pw   = request.form["password"]
         conn = get_db()
-        cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur  = conn.cursor()
         p    = fetch_one(cur, "SELECT * FROM players WHERE name=%s", (name,))
         cur.close()
         conn.close()
@@ -110,7 +110,7 @@ def dashboard():
     if not p:
         return redirect(url_for("index"))
     conn = get_db()
-    cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur  = conn.cursor()
     logs    = fetch_all(cur, "SELECT * FROM battle_log WHERE attacker_id=%s ORDER BY id DESC LIMIT 5", (p["id"],))
     ranking = fetch_all(cur, "SELECT name, exp, wins FROM players ORDER BY exp DESC LIMIT 10")
     cur.close()
@@ -142,7 +142,7 @@ def battle_player():
     if not p:
         return redirect(url_for("index"))
     conn = get_db()
-    cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur  = conn.cursor()
     if request.method == "POST":
         target_id = int(request.form["target_id"])
         if target_id == p["id"]:
@@ -221,7 +221,7 @@ def nations():
     if not p:
         return redirect(url_for("index"))
     conn = get_db()
-    cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur  = conn.cursor()
     nations_list = fetch_all(cur, """
         SELECT n.*, COUNT(pl.id) as member_count
         FROM nations n
@@ -249,7 +249,7 @@ def create_nation():
         flash(f"建国には{cost}G必要です")
         return redirect(url_for("nations"))
     conn = get_db()
-    cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur  = conn.cursor()
     try:
         cur.execute("INSERT INTO nations (name, leader_id, gold) VALUES (%s,%s,%s)", (nation_name, p["id"], 0))
         nation = fetch_one(cur, "SELECT id FROM nations WHERE name=%s", (nation_name,))
@@ -302,7 +302,7 @@ def chat():
     if not p:
         return redirect(url_for("index"))
     conn = get_db()
-    cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur  = conn.cursor()
     messages = fetch_all(cur, "SELECT * FROM chat ORDER BY id DESC LIMIT 50")
     cur.close()
     conn.close()
