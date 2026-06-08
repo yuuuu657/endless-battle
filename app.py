@@ -15,11 +15,9 @@ app.jinja_env.globals["enumerate"] = enumerate
 
 init_db()
 
-# ─── ヘルパー ───────────────────────────────────────────
 def fetch_one(cur, query, params=()):
     cur.execute(query, params)
-    row = cur.fetchone()
-    return row
+    return cur.fetchone()
 
 def fetch_all(cur, query, params=()):
     cur.execute(query, params)
@@ -29,7 +27,7 @@ def current_player():
     if "player_id" not in session:
         return None
     conn = get_db()
-    cur = conn.cursor()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     p = fetch_one(cur, "SELECT * FROM players WHERE id=%s", (session["player_id"],))
     cur.close()
     conn.close()
@@ -46,7 +44,6 @@ def player_info(p):
         "armor_name":  ARMORS.get(p["armor_id"],  ARMORS[1])["name"],
     }
 
-# ─── トップ・認証 ──────────────────────────────────────
 @app.route("/")
 def index():
     if "player_id" in session:
@@ -66,7 +63,7 @@ def register():
             return render_template("register.html")
         hashed = bcrypt.hashpw(pw.encode(), bcrypt.gensalt()).decode()
         conn = get_db()
-        cur = conn.cursor()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         try:
             cur.execute("INSERT INTO players (name, password) VALUES (%s,%s)", (name, hashed))
             conn.commit()
@@ -88,7 +85,7 @@ def login():
         name = request.form["name"].strip()
         pw   = request.form["password"]
         conn = get_db()
-        cur  = conn.cursor()
+        cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         p    = fetch_one(cur, "SELECT * FROM players WHERE name=%s", (name,))
         cur.close()
         conn.close()
@@ -103,21 +100,19 @@ def logout():
     session.clear()
     return redirect(url_for("index"))
 
-# ─── ダッシュボード ────────────────────────────────────
 @app.route("/dashboard")
 def dashboard():
     p = current_player()
     if not p:
         return redirect(url_for("index"))
     conn = get_db()
-    cur  = conn.cursor()
+    cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     logs    = fetch_all(cur, "SELECT * FROM battle_log WHERE attacker_id=%s ORDER BY id DESC LIMIT 5", (p["id"],))
     ranking = fetch_all(cur, "SELECT name, exp, wins FROM players ORDER BY exp DESC LIMIT 10")
     cur.close()
     conn.close()
     return render_template("dashboard.html", player=player_info(p), logs=logs, ranking=ranking)
 
-# ─── 戦闘（モンスター）──────────────────────────────────
 @app.route("/battle/monster", methods=["POST"])
 def battle_monster():
     p = current_player()
@@ -135,14 +130,13 @@ def battle_monster():
     conn.close()
     return render_template("battle_result.html", result=result, player=player_info(p))
 
-# ─── 戦闘（プレイヤー）──────────────────────────────────
 @app.route("/battle/player", methods=["GET","POST"])
 def battle_player():
     p = current_player()
     if not p:
         return redirect(url_for("index"))
     conn = get_db()
-    cur  = conn.cursor()
+    cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     if request.method == "POST":
         target_id = int(request.form["target_id"])
         if target_id == p["id"]:
@@ -173,7 +167,6 @@ def battle_player():
     player_list = [{"id":r["id"],"name":r["name"],"level":calc_level(r["exp"]),"wins":r["wins"],"losses":r["losses"]} for r in players]
     return render_template("battle_player.html", player=player_info(p), players=player_list)
 
-# ─── ショップ ──────────────────────────────────────────
 @app.route("/shop")
 def shop():
     p = current_player()
@@ -214,14 +207,13 @@ def shop_buy():
     flash(f"「{item['name']}」を購入しました！")
     return redirect(url_for("shop"))
 
-# ─── 国家 ──────────────────────────────────────────────
 @app.route("/nations")
 def nations():
     p = current_player()
     if not p:
         return redirect(url_for("index"))
     conn = get_db()
-    cur  = conn.cursor()
+    cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     nations_list = fetch_all(cur, """
         SELECT n.*, COUNT(pl.id) as member_count
         FROM nations n
@@ -249,7 +241,7 @@ def create_nation():
         flash(f"建国には{cost}G必要です")
         return redirect(url_for("nations"))
     conn = get_db()
-    cur  = conn.cursor()
+    cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         cur.execute("INSERT INTO nations (name, leader_id, gold) VALUES (%s,%s,%s)", (nation_name, p["id"], 0))
         nation = fetch_one(cur, "SELECT id FROM nations WHERE name=%s", (nation_name,))
@@ -295,14 +287,13 @@ def leave_nation():
     flash("国を離脱しました")
     return redirect(url_for("nations"))
 
-# ─── チャット ───────────────────────────────────────────
 @app.route("/chat")
 def chat():
     p = current_player()
     if not p:
         return redirect(url_for("index"))
     conn = get_db()
-    cur  = conn.cursor()
+    cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     messages = fetch_all(cur, "SELECT * FROM chat ORDER BY id DESC LIMIT 50")
     cur.close()
     conn.close()
@@ -324,13 +315,12 @@ def chat_post():
         conn.close()
     return redirect(url_for("chat"))
 
-# ─── 管理者ページ ──────────────────────────────────────
 @app.route("/admin", methods=["GET","POST"])
 def admin():
     if request.args.get("key") != "endless2026admin":
         return "403 Forbidden", 403
     conn = get_db()
-    cur = conn.cursor()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     if request.method == "POST":
         name   = request.form["name"]
         exp    = request.form.get("exp")
