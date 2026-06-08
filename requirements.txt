@@ -1,5 +1,4 @@
 flask
 bcrypt
 gunicorn
-6:51
 psycopg2-binary
