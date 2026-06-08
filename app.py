@@ -323,5 +323,29 @@ def chat_post():
         db.close()
     return redirect(url_for("chat"))
 
+# ─── 管理者ページ ──────────────────────────────────────
+@app.route("/admin", methods=["GET","POST"])
+def admin():
+    if request.args.get("key") != "endless2026admin":
+        return "403 Forbidden", 403
+    conn = get_db()
+    cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    if request.method == "POST":
+        name   = request.form["name"]
+        exp    = request.form.get("exp")
+        gold   = request.form.get("gold")
+        weapon = request.form.get("weapon_id")
+        armor  = request.form.get("armor_id")
+        if exp:    cur.execute("UPDATE players SET exp=%s    WHERE name=%s", (exp, name))
+        if gold:   cur.execute("UPDATE players SET gold=%s   WHERE name=%s", (gold, name))
+        if weapon: cur.execute("UPDATE players SET weapon_id=%s WHERE name=%s", (weapon, name))
+        if armor:  cur.execute("UPDATE players SET armor_id=%s  WHERE name=%s", (armor, name))
+        conn.commit()
+        flash(f"{name}のデータを更新しました")
+    players = fetch_all(cur, "SELECT id,name,exp,gold,weapon_id,armor_id FROM players ORDER BY exp DESC")
+    cur.close()
+    conn.close()
+    return render_template("admin.html", players=players, weapons=WEAPONS, armors=ARMORS)
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
