@@ -53,9 +53,9 @@
       <h3>🏆 ランキング TOP10</h3>
       <table>
         <tr><th>#</th><th>名前</th><th>EXP</th><th>勝</th></tr>
-        {% for i, r in ranking|enumerate %}
+        {% for r in ranking %}
         <tr class="{{ 'me' if r.name == player.name else '' }}">
-          <td>{{ i+1 }}</td>
+          <td>{{ loop.index }}</td>
           <td>{{ r.name }}</td>
           <td>{{ r.exp }}</td>
           <td>{{ r.wins }}</td>
