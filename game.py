@@ -3,38 +3,59 @@ import math
 
 # 武器マスターデータ
 WEAPONS = {
-    1:  {"name": "木の剣",     "atk": 2,  "price": 50,   "min_lv": 1},
-    2:  {"name": "銅の剣",     "atk": 5,  "price": 150,  "min_lv": 3},
-    3:  {"name": "鉄の剣",     "atk": 10, "price": 400,  "min_lv": 5},
-    4:  {"name": "鋼の剣",     "atk": 18, "price": 900,  "min_lv": 8},
-    5:  {"name": "銀の剣",     "atk": 28, "price": 2000, "min_lv": 12},
-    6:  {"name": "魔法の剣",   "atk": 42, "price": 5000, "min_lv": 18},
-    7:  {"name": "ドラゴン刃", "atk": 60, "price": 12000,"min_lv": 25},
-    8:  {"name": "神剣",       "atk": 85, "price": 30000,"min_lv": 35},
+    1:  {"name": "木の剣",       "atk": 2,   "price": 50,       "min_lv": 1},
+    2:  {"name": "銅の剣",       "atk": 5,   "price": 150,      "min_lv": 3},
+    3:  {"name": "鉄の剣",       "atk": 10,  "price": 400,      "min_lv": 5},
+    4:  {"name": "鋼の剣",       "atk": 18,  "price": 900,      "min_lv": 8},
+    5:  {"name": "銀の剣",       "atk": 28,  "price": 2000,     "min_lv": 12},
+    6:  {"name": "魔法の剣",     "atk": 42,  "price": 5000,     "min_lv": 18},
+    7:  {"name": "ドラゴン刃",   "atk": 60,  "price": 12000,    "min_lv": 25},
+    8:  {"name": "神剣",         "atk": 85,  "price": 30000,    "min_lv": 35},
+    9:  {"name": "覇王の剣",     "atk": 115, "price": 80000,    "min_lv": 45},
+    10: {"name": "冥王刃",       "atk": 150, "price": 200000,   "min_lv": 55},
+    11: {"name": "天魔の剣",     "atk": 195, "price": 500000,   "min_lv": 65},
+    12: {"name": "聖剣エクス",   "atk": 250, "price": 1200000,  "min_lv": 75},
+    13: {"name": "滅神剣",       "atk": 320, "price": 3000000,  "min_lv": 85},
+    14: {"name": "創世の刃",     "atk": 400, "price": 8000000,  "min_lv": 92},
+    15: {"name": "絶対神剣",     "atk": 500, "price": 20000000, "min_lv": 99},
 }
 
 # 防具マスターデータ
 ARMORS = {
-    1:  {"name": "布の鎧",     "def": 2,  "price": 50,   "min_lv": 1},
-    2:  {"name": "革の鎧",     "def": 5,  "price": 150,  "min_lv": 3},
-    3:  {"name": "鉄の鎧",     "def": 10, "price": 400,  "min_lv": 5},
-    4:  {"name": "鋼の鎧",     "def": 18, "price": 900,  "min_lv": 8},
-    5:  {"name": "銀の鎧",     "def": 28, "price": 2000, "min_lv": 12},
-    6:  {"name": "魔法の鎧",   "def": 42, "price": 5000, "min_lv": 18},
-    7:  {"name": "龍鱗の鎧",   "def": 60, "price": 12000,"min_lv": 25},
-    8:  {"name": "神の鎧",     "def": 85, "price": 30000,"min_lv": 35},
+    1:  {"name": "布の鎧",       "def": 2,   "price": 50,       "min_lv": 1},
+    2:  {"name": "革の鎧",       "def": 5,   "price": 150,      "min_lv": 3},
+    3:  {"name": "鉄の鎧",       "def": 10,  "price": 400,      "min_lv": 5},
+    4:  {"name": "鋼の鎧",       "def": 18,  "price": 900,      "min_lv": 8},
+    5:  {"name": "銀の鎧",       "def": 28,  "price": 2000,     "min_lv": 12},
+    6:  {"name": "魔法の鎧",     "def": 42,  "price": 5000,     "min_lv": 18},
+    7:  {"name": "龍鱗の鎧",     "def": 60,  "price": 12000,    "min_lv": 25},
+    8:  {"name": "神の鎧",       "def": 85,  "price": 30000,    "min_lv": 35},
+    9:  {"name": "覇王の鎧",     "def": 115, "price": 80000,    "min_lv": 45},
+    10: {"name": "冥王鎧",       "def": 150, "price": 200000,   "min_lv": 55},
+    11: {"name": "天魔の鎧",     "def": 195, "price": 500000,   "min_lv": 65},
+    12: {"name": "聖鎧エクス",   "def": 250, "price": 1200000,  "min_lv": 75},
+    13: {"name": "滅神鎧",       "def": 320, "price": 3000000,  "min_lv": 85},
+    14: {"name": "創世の鎧",     "def": 400, "price": 8000000,  "min_lv": 92},
+    15: {"name": "絶対神鎧",     "def": 500, "price": 20000000, "min_lv": 99},
 }
 
 # モンスターマスターデータ
 MONSTERS = [
-    {"name": "スライム",   "hp": 20,  "atk": 3,  "def": 1,  "exp": 10,  "gold": 15,  "min_lv": 1},
-    {"name": "ゴブリン",   "hp": 40,  "atk": 7,  "def": 3,  "exp": 25,  "gold": 30,  "min_lv": 2},
-    {"name": "オーク",     "hp": 80,  "atk": 12, "def": 6,  "exp": 55,  "gold": 60,  "min_lv": 4},
-    {"name": "トロール",   "hp": 150, "atk": 20, "def": 10, "exp": 110, "gold": 110, "min_lv": 7},
-    {"name": "ワイバーン", "hp": 280, "atk": 32, "def": 16, "exp": 200, "gold": 200, "min_lv": 11},
-    {"name": "ドラゴン",   "hp": 500, "atk": 50, "def": 25, "exp": 400, "gold": 380, "min_lv": 17},
-    {"name": "魔王の使い", "hp": 900, "atk": 75, "def": 38, "exp": 750, "gold": 700, "min_lv": 24},
-    {"name": "魔王",       "hp": 1500,"atk":110, "def": 55, "exp":1500, "gold":1500, "min_lv": 33},
+    {"name": "スライム",   "hp": 20,    "atk": 3,   "def": 1,   "exp": 10,    "gold": 15,     "min_lv": 1},
+    {"name": "ゴブリン",   "hp": 40,    "atk": 7,   "def": 3,   "exp": 25,    "gold": 30,     "min_lv": 2},
+    {"name": "オーク",     "hp": 80,    "atk": 12,  "def": 6,   "exp": 55,    "gold": 60,     "min_lv": 4},
+    {"name": "トロール",   "hp": 150,   "atk": 20,  "def": 10,  "exp": 110,   "gold": 110,    "min_lv": 7},
+    {"name": "ワイバーン", "hp": 280,   "atk": 32,  "def": 16,  "exp": 200,   "gold": 200,    "min_lv": 11},
+    {"name": "ドラゴン",   "hp": 500,   "atk": 50,  "def": 25,  "exp": 400,   "gold": 380,    "min_lv": 17},
+    {"name": "魔王の使い", "hp": 900,   "atk": 75,  "def": 38,  "exp": 750,   "gold": 700,    "min_lv": 24},
+    {"name": "魔王",       "hp": 1500,  "atk": 110, "def": 55,  "exp": 1500,  "gold": 1500,   "min_lv": 33},
+    {"name": "覇王",       "hp": 2500,  "atk": 160, "def": 80,  "exp": 3000,  "gold": 4000,   "min_lv": 43},
+    {"name": "冥王",       "hp": 4000,  "atk": 220, "def": 110, "exp": 6000,  "gold": 9000,   "min_lv": 53},
+    {"name": "天魔大王",   "hp": 6500,  "atk": 300, "def": 150, "exp": 12000, "gold": 20000,  "min_lv": 63},
+    {"name": "神滅獣",     "hp": 10000, "atk": 400, "def": 200, "exp": 25000, "gold": 50000,  "min_lv": 73},
+    {"name": "破壊神",     "hp": 16000, "atk": 520, "def": 260, "exp": 50000, "gold": 120000, "min_lv": 83},
+    {"name": "創世神",     "hp": 25000, "atk": 680, "def": 340, "exp": 100000,"gold": 300000, "min_lv": 91},
+    {"name": "絶対神",     "hp": 40000, "atk": 900, "def": 450, "exp": 200000,"gold": 800000, "min_lv": 98},
 ]
 
 def get_exp_for_level(level):
@@ -56,14 +77,9 @@ def calc_max_hp(level, base_hp=50):
 def get_available_monsters(player_level):
     """プレイヤーレベルに応じたモンスターリスト"""
     available = [m for m in MONSTERS if m["min_lv"] <= player_level]
-    # 上位3体まで
     return available[-3:] if len(available) > 3 else available
 
 def battle_vs_monster(player, monster_id_or_name=None):
-    """
-    プレイヤー vs モンスター 戦闘処理
-    Returns: dict with result, log, rewards
-    """
     level = calc_level(player["exp"])
     available = get_available_monsters(level)
     if not available:
@@ -71,7 +87,6 @@ def battle_vs_monster(player, monster_id_or_name=None):
 
     monster = random.choice(available).copy()
 
-    # プレイヤーのステータス計算
     weapon = WEAPONS.get(player["weapon_id"], WEAPONS[1])
     armor  = ARMORS.get(player["armor_id"],  ARMORS[1])
     p_atk = level * 3 + weapon["atk"]
@@ -89,15 +104,11 @@ def battle_vs_monster(player, monster_id_or_name=None):
     turn = 0
     while p_cur_hp > 0 and m_hp > 0 and turn < 30:
         turn += 1
-        # プレイヤーの攻撃
         p_dmg = max(1, p_atk - m_def + random.randint(-3, 5))
         m_hp -= p_dmg
         log.append(f"あなたの攻撃！ {monster['name']}に {p_dmg} ダメージ（残HP: {max(0,m_hp)}）")
-
         if m_hp <= 0:
             break
-
-        # モンスターの攻撃
         m_dmg = max(1, m_atk - p_def + random.randint(-3, 5))
         p_cur_hp -= m_dmg
         log.append(f"{monster['name']}の攻撃！ あなたに {m_dmg} ダメージ（残HP: {max(0,p_cur_hp)}）")
@@ -128,9 +139,6 @@ def battle_vs_monster(player, monster_id_or_name=None):
         }
 
 def battle_vs_player(attacker, defender):
-    """
-    プレイヤー vs プレイヤー 戦闘処理
-    """
     def stats(p):
         lv = calc_level(p["exp"])
         w  = WEAPONS.get(p["weapon_id"], WEAPONS[1])
@@ -153,13 +161,11 @@ def battle_vs_player(attacker, defender):
     turn = 0
     while a_hp > 0 and d_hp > 0 and turn < 30:
         turn += 1
-        # 攻撃側
         dmg = max(1, a_st["atk"] - d_st["def"] + random.randint(-5, 8))
         d_hp -= dmg
         log.append(f"{attacker['name']}の攻撃！ {defender['name']}に {dmg} ダメージ（残HP: {max(0,d_hp)}）")
         if d_hp <= 0:
             break
-        # 防御側の反撃
         dmg2 = max(1, d_st["atk"] - a_st["def"] + random.randint(-5, 8))
         a_hp -= dmg2
         log.append(f"{defender['name']}の反撃！ {attacker['name']}に {dmg2} ダメージ（残HP: {max(0,a_hp)}）")
